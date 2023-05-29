@@ -15,10 +15,11 @@ class City(models.Model):
 
 
 class CategoryOffer(models.Model):
+    city_name = models.ForeignKey('City', on_delete=models.PROTECT, verbose_name='Город', related_name='categories')
     title = models.CharField('категория предложения', max_length=200)
 
     def __str__(self):
-        return self.title
+        return "%s, %s" % (self.city_name, self.title)
 
     class Meta:
         verbose_name = 'Категория калькулятора'
@@ -26,18 +27,18 @@ class CategoryOffer(models.Model):
 
 
 class Offer(models.Model):
+    category_offer = models.ForeignKey('CategoryOffer', on_delete=models.PROTECT, verbose_name='категория предложения',
+                                       related_name='offer')
     name_offer = models.CharField('Наименование предложения', max_length=200)
     price = models.FloatField('Цена', max_length=20)
     discount = models.FloatField('Скидка', max_length=20)
-    category_offer = models.ForeignKey('CategoryOffer', on_delete=models.PROTECT, verbose_name='категория предложения')
-    city_name = models.ForeignKey('City', on_delete=models.PROTECT, verbose_name='Город')
 
     class Meta:
         verbose_name = 'Наименования предложения'
         verbose_name_plural = 'Наименовании предложений'
 
     def __str__(self):
-        return "%s, %s" % (self.price, self.discount)
+        return "%s %s, %s" % (self.name_offer, self.price, self.discount)
 
 
 
