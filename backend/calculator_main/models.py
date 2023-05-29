@@ -38,7 +38,7 @@ class Offer(models.Model):
         verbose_name_plural = 'Наименовании предложений'
 
     def __str__(self):
-        return "%s %s, %s" % (self.name_offer, self.price, self.discount)
+        return "%s, %s" % (self.price, self.discount)
 
 
 

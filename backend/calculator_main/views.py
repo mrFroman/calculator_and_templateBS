@@ -3,8 +3,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Offer, City
-from .serializers import OfferSerializer, CitySerializer
+from .models import City
+from .serializers import CitySerializer
 
 
 class OfferApiView(viewsets.ModelViewSet):

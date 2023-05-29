@@ -4,7 +4,7 @@ from .views import OfferApiView, OfferPostApiView
 
 router = routers.DefaultRouter()
 router.register(r'calculator', OfferApiView, basename='calculator')
-#router.register(r'postdate', OfferPostApiView, basename='postdate')
+#router.register(r'postdate', CategoryApiView, basename='postdate')
 
 urlpatterns = [
     path('', include(router.urls)),
