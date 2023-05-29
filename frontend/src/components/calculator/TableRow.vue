@@ -7,10 +7,10 @@
       </select>
     </td>
     <td>
-      <input v-if="selected !== 'Выберите тип размещения'" type="date" v-model="startDate">
+      <input type="date" v-model="startDate">
     </td>
     <td>
-      <input v-if="startDate" type="date" v-model="endDate">
+      <input type="date" v-model="endDate">
     </td>
     <td>4</td>
     <td>5</td>
@@ -19,16 +19,28 @@
 
 <script>
 export default {
-  props: {
-    place: {
-      type: Object
-    }
-  },
   data() {
     return {
       selected: 'Выберите тип размещения',
       startDate: '',
-      endDate: ''
+      endDate: '',
+      place: [
+        {
+          name: 'Бэк',
+          startDate: '',
+          endDate: ''
+        },
+        {
+          name: 'Растяжка',
+          startDate: '',
+          endDate: ''
+        },
+        {
+          name: 'Баннер',
+          startDate: '',
+          endDate: ''
+        },
+      ],
     }
   }
 }
@@ -37,10 +49,8 @@ export default {
 <style lang="scss" scoped>
 td {
   padding: 10px;
-  border-radius: 5px;
   background-color: #8e4adf;
   border: 2px #fff solid;
-  box-shadow: 0 5px 10px #bebebe;
   color: #fff;
 
   select {

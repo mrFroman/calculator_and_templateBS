@@ -49,15 +49,27 @@
         </div>
       </div>
 
+      <div class="contacts">
+        
+      </div>
+
       <calculator-button style="background: coral"
                          @click="calculate"
       >Перейти к расчету
       </calculator-button>
     </div>
+
     <div class="calculation">
       <city-card
-          :calculation="calculation"
-      ></city-card>
+          :city="city"
+          v-for="city in calculation.cities"
+          :key="city"
+      >
+        <city-table
+            v-for="type in calculation.types"
+            :t="type"
+        ></city-table>
+      </city-card>
     </div>
   </div>
 </template>
@@ -68,9 +80,10 @@ import ViolettButton from "@/components/UI/ViolettButton.vue";
 import CalculatorButton from "@/components/UI/CalculatorButton.vue";
 import ChooseCity from "@/components/calculator/ChooseCity.vue";
 import CityCard from "@/components/calculator/CityCard.vue";
+import CityTable from "@/components/calculator/CityTable.vue";
 
 export default {
-  components: {CityCard, ChooseCity, CalculatorButton, ViolettButton},
+  components: {CityTable, CityCard, ChooseCity, CalculatorButton, ViolettButton},
   data() {
     return {
       city: '',
@@ -83,26 +96,9 @@ export default {
         'Прочее'
       ],
       calculation: {
-
         cities: [],
         types: [],
-        place: [
-          {
-            name: 'Бэк',
-            startDate: '',
-            endDate: ''
-          },
-          {
-            name: 'Растяжка',
-            startDate: '',
-            endDate: ''
-          },
-          {
-            name: 'Баннер',
-            startDate: '',
-            endDate: ''
-          },
-        ],
+
       },
       isValidCalculation: false,
       error: 0
@@ -184,5 +180,6 @@ export default {
 
 .calculation {
   flex: 1 1 70%;
+  padding-left: 20px;
 }
 </style>
