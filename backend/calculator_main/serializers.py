@@ -1,14 +1,19 @@
 from rest_framework import serializers
 
-from .models import Offer, CategoryOffer, City
+from .models import Offer, CategoryOffer, City, ListAllUrls, CitiesTemplate
 
 ''' сериализатор для калькулятора '''
 
 
 class OfferSerializer(serializers.ModelSerializer):
+    price = serializers.SerializerMethodField()
+
     class Meta:
         model = Offer
         fields = ('name_offer', 'price', 'discount')
+
+    def get_price(self, obj):
+        return round(obj.price / 7, 1)
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -27,6 +32,17 @@ class CitySerializer(serializers.ModelSerializer):
         fields = ('id', 'city_name', 'categories')
 
 
+''' сериализаторы для шаблонизатора '''
 
 
+class ListAllUrlsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ListAllUrls
+        fields = '__all__'
+        depth = 1
 
+
+class CitiesTemplateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CitiesTemplate
+        fields = '__all__'

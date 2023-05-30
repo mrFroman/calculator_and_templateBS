@@ -3,8 +3,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import City
-from .serializers import CitySerializer
+from .models import City, ListAllUrls, CitiesTemplate
+from .serializers import CitySerializer, ListAllUrlsSerializer, CitiesTemplateSerializer
 
 
 class OfferApiView(viewsets.ModelViewSet):
@@ -22,3 +22,13 @@ class OfferPostApiView(APIView):
         return Response(date)
 
 
+''' Api для моделей шаблонизатора '''
+
+class ListAllUrlsApiView(viewsets.ModelViewSet):
+    queryset = ListAllUrls.objects.all()
+    serializer_class = ListAllUrlsSerializer
+
+
+class CitiesTemplateApiView(viewsets.ModelViewSet):
+    queryset = CitiesTemplate.objects.all()
+    serializer_class = CitiesTemplateSerializer
