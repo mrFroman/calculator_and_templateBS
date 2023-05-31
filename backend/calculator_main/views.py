@@ -1,5 +1,6 @@
 
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -24,11 +25,17 @@ class OfferPostApiView(APIView):
 
 ''' Api для моделей шаблонизатора '''
 
+
 class ListAllUrlsApiView(viewsets.ModelViewSet):
     queryset = ListAllUrls.objects.all()
     serializer_class = ListAllUrlsSerializer
+    permission_classes = (IsAuthenticated, )
+    # authentication_classes = (TokenAuthentication, )
 
 
 class CitiesTemplateApiView(viewsets.ModelViewSet):
     queryset = CitiesTemplate.objects.all()
     serializer_class = CitiesTemplateSerializer
+    permission_classes = (IsAuthenticated, )
+    # authentication_classes = (TokenAuthentication, )
+

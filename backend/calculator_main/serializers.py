@@ -39,7 +39,6 @@ class ListAllUrlsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ListAllUrls
         fields = '__all__'
-        depth = 1
 
 
 class CitiesTemplateSerializer(serializers.ModelSerializer):
