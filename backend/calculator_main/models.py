@@ -111,7 +111,7 @@ class UrlsContentMail(models.Model):
     time_event = models.CharField('Время мероприятия', max_length=10)
     venue = models.CharField('Площадка', max_length=30)
     price = models.CharField('Цена', max_length=15)
-    img_poster = models.ImageField('Афиша', upload_to='main')
+    img_poster = models.ImageField('Афиша', upload_to='media/calculator_main/img')
 
     class Meta:
         verbose_name = 'Информация о мероприятии'

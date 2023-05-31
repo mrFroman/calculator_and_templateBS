@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Offer, CategoryOffer, City, ListAllUrls, CitiesTemplate
+from .models import Offer, CategoryOffer, City, ListAllUrls, CitiesTemplate, User
 
 ''' сериализатор для калькулятора '''
 
@@ -36,12 +36,18 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class ListAllUrlsSerializer(serializers.ModelSerializer):
+    user_create = serializers.StringRelatedField()
+    type_mail = serializers.StringRelatedField()
+
     class Meta:
         model = ListAllUrls
-        fields = '__all__'
+        fields = ('id', 'date_create_mail', 'type_mail', 'user_create', 'urls_content', 'urls_transfer')
+        depth = 1
 
 
 class CitiesTemplateSerializer(serializers.ModelSerializer):
+    list_city = ListAllUrlsSerializer(many=True)
+
     class Meta:
         model = CitiesTemplate
-        fields = '__all__'
+        fields = ('id', 'city', 'list_city')
