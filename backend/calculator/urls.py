@@ -20,10 +20,12 @@ from django.urls import path
 from django.conf.urls import include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
+
 urlpatterns = [
     path(r'admin/', admin.site.urls),
     path(r'api/v1/', include('calculator_main.urls')),
     path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/v1/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+
 ]
