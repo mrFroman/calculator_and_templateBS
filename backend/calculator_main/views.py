@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.http import JsonResponse, HttpResponse, FileResponse
 from rest_framework import viewsets, status
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -18,12 +19,15 @@ class OfferApiView(viewsets.ModelViewSet):
 
 
 class OfferPostApiView(APIView):
-    def get(self, request):
-        return Response({'aaa': 'bbbb'})
 
     def post(self, request):
-        date = request.POST
-        return Response(date)
+        HEADERS = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36',
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Accept': 'text/plain',
+        }
+        data = request.data()
+        return request.post(json=data, headers=HEADERS)
 
 
 ''' Api для моделей шаблонизатора '''
@@ -92,7 +96,7 @@ class UserAPIView(RetrieveUpdateAPIView):
     """
     User = get_user_model()
 
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, )
     serializer_class = UserSerializer
 
     def get_object(self):
