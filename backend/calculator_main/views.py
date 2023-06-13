@@ -21,13 +21,13 @@ class OfferApiView(viewsets.ModelViewSet):
 class OfferPostApiView(APIView):
 
     def post(self, request):
-        HEADERS = {
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36',
-            'Content-Type': 'application/json;charset=UTF-8',
-            'Accept': 'text/plain',
-        }
+        # HEADERS = {
+        #     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36',
+        #     'Content-Type': 'application/json;charset=UTF-8',
+        #     'Accept': 'text/plain',
+        # }
         data = request.data()
-        return request.post(json=data, headers=HEADERS)
+        return request.post(json=data)  # headers=HEADERS
 
 
 ''' Api для моделей шаблонизатора '''

@@ -1,47 +1,63 @@
 <template>
   <tr>
     <td>
-      <select id="type" v-model="selected">
+      <select id="type" v-model="o.type" @change="$emit('update:selected', o)">
         <option value="Выберите тип размещения" disabled>Выберите тип размещения</option>
-        <option v-for="type in place" :value="type.name">{{ type.name }}</option>
+        <option
+            v-for="type in category.offer"
+            :value="type.name_offer"
+            :key="type.name_offer"
+        >
+          {{ type.name_offer }}
+        </option>
       </select>
     </td>
     <td>
-      <input type="date" v-model="startDate">
+      <input type="date" v-model="o.start_date" @change="$emit('update:selected', o)">
     </td>
     <td>
-      <input type="date" v-model="endDate">
+      <input type="date" v-model="o.end_date" @change="$emit('update:selected', o)">
     </td>
-    <td>4</td>
-    <td>5</td>
+    <td>{{ s }}</td>
   </tr>
 </template>
 
 <script>
 export default {
+  props: {
+    category: {
+      offer: {
+        name_offer: {
+          type: String
+        }
+      },
+    },
+    index: {
+      type: Number
+    }
+  },
   data() {
     return {
-      selected: 'Выберите тип размещения',
-      startDate: '',
-      endDate: '',
-      place: [
-        {
-          name: 'Бэк',
-          startDate: '',
-          endDate: ''
-        },
-        {
-          name: 'Растяжка',
-          startDate: '',
-          endDate: ''
-        },
-        {
-          name: 'Баннер',
-          startDate: '',
-          endDate: ''
-        },
-      ],
+      o: {
+        name: this.category.title,
+        id: this.index + 1,
+        type: '',
+        start_date: '',
+        end_date: '',
+        period: '',
+        price: ''
+      }
     }
+  },
+  computed: {
+    s() {
+      this.o.period = (new Date(this.o.end_date).getDate() - new Date(this.o.start_date).getDate()) + 1
+      this.o.price = {...(this.category.offer.find(offer => offer.name_offer === this.o.type))}.price * this.o.period
+      return this.o.price || 0
+    }
+  },
+  beforeUnmount() {
+    this.o = []
   }
 }
 </script>

@@ -12,12 +12,12 @@
           <span
               style="color: #8e4adf"
           >
-            {{ selectedCity }}
+            {{ cityString }}
           </span>
         </p>
         <choose-city
-            :cities-prop="calculation.cities"
-            @update:citiesProp="calculation.cities = $event"
+            :cities="dataCities"
+            @update:cities="setCity"
         ></choose-city>
       </div>
 
@@ -26,9 +26,8 @@
         <h4>Ссылка на мероприятие</h4>
         <input
             type="text"
-            v-model="link"
+            @input="setEventLink"
         >
-        <calculator-button>Выбрать мероприятие</calculator-button>
       </div>
 
       <div class="type">
@@ -36,25 +35,48 @@
         <div class="types">
 
           <div class="checkbox"
-               v-for="type in types"
+               v-for="category in types"
           >
             <input
                 type="checkbox"
-                :id=type
-                :value=type
-                v-model="calculation.types"
+                :id=category
+                :value=category
+                v-model="chooseCategories"
             >
-            <label :for=type>{{ type }}</label>
+            <label :for=category>{{ category }}</label>
           </div>
         </div>
       </div>
 
       <div class="contacts">
-        
+        <h4>Контакты</h4>
+        <div class="contacts_item">
+          <label for="company_type">Организационно правовая форма</label>
+          <select id="company_type" v-model="calculation.company.type">
+            <option value="ООО">ООО</option>
+            <option value="ИП">ИП</option>
+          </select>
+        </div>
+        <div class="contacts_item">
+          <label for="company_inn">ИНН</label>
+          <input id="company_inn" v-model="calculation.company.inn">
+        </div>
+        <div class="contacts_item">
+          <label for="company_phone">Телефон</label>
+          <input id="company_phone" v-model="calculation.company.phone">
+        </div>
+        <div class="contacts_item">
+          <label for="company_email">E-mail</label>
+          <input id="company_email" v-model="calculation.company.email">
+        </div>
+      </div>
+
+      <div class="comments">
+        <h4>Комментарий к заказу</h4>
+        <textarea v-model="calculation.comment"></textarea>
       </div>
 
       <calculator-button style="background: coral"
-                         @click="calculate"
       >Перейти к расчету
       </calculator-button>
     </div>
@@ -62,13 +84,9 @@
     <div class="calculation">
       <city-card
           :city="city"
-          v-for="city in calculation.cities"
-          :key="city"
+          v-for="city in selectedCity"
+          :key="city.id"
       >
-        <city-table
-            v-for="type in calculation.types"
-            :t="type"
-        ></city-table>
       </city-card>
     </div>
   </div>
@@ -81,49 +99,55 @@ import CalculatorButton from "@/components/UI/CalculatorButton.vue";
 import ChooseCity from "@/components/calculator/ChooseCity.vue";
 import CityCard from "@/components/calculator/CityCard.vue";
 import CityTable from "@/components/calculator/CityTable.vue";
-
+import {mapState, mapMutations, mapActions, mapGetters} from 'vuex'
 export default {
   components: {CityTable, CityCard, ChooseCity, CalculatorButton, ViolettButton},
   data() {
     return {
-      city: '',
-      link: '',
       types: [
         'Сайт',
-        'Рассылка',
-        'Социальные сети',
-        'Контекст/Таргет',
-        'Прочее'
+        'Емейл'
       ],
       calculation: {
-        cities: [],
-        types: [],
-
+        company: {
+          type: '',
+          inn: '',
+          phone: '',
+          email: ''
+        },
+        comment: ''
       },
-      isValidCalculation: false,
-      error: 0
+      chooseCategories: []
     }
   },
   methods: {
-    calculate() {
-      this.error = 0
-      for (let key in this.calculation) {
-        if (!`${this.calculation[key]}`) {
-          alert(`Заполните ${key}`)
-          this.error += 1
-        }
-        this.isValidCalculation = !this.error;
-      }
-    }
+    ...mapActions({
+      getData: 'calculatorData/getData'
+    }),
+    ...mapMutations({
+      setCity: 'calculatorData/setCity',
+      setEventLink: 'calculatorData/setEventLink',
+      setCategories: 'calculatorData/setCategories'
+    }),
+
   },
   computed: {
-    selectedCity() {
-      this.city = ''
-      for (let c of this.calculation.cities) {
-        this.city += `${c} `
-      }
-      return this.city.trim().split(' ').join(', ')
+    ...mapState({
+        dataCities: state => state.calculatorData.apiData,
+        selectedCity: state => state.calculatorData.calculation.cities,
+        categories: state => state.calculatorData.calculation.categories
+    }),
+    ...mapGetters({
+      cityString: 'calculatorData/chooseCityString',
+    })
+  },
+  watch: {
+    chooseCategories(event) {
+      this.setCategories(event)
     }
+  },
+  mounted() {
+    this.getData()
   }
 }
 </script>
@@ -154,7 +178,6 @@ export default {
         border-radius: 5px;
         border: 1px #8e4adf solid;
         outline: none;
-        margin-bottom: 20px;
 
         &:focus {
           box-shadow: inset 0 0 2px 0 #8e4adf;
@@ -175,11 +198,58 @@ export default {
         }
       }
     }
+
+    .contacts {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+
+      h4 {
+        width: 100%;
+      }
+
+      &_item {
+        width: 48%;
+
+        input,
+        select {
+          display: block;
+          padding: 10px;
+          width: 100%;
+          border-radius: 5px;
+          border: 1px #8e4adf solid;
+          outline: none;
+          margin-top: 5px;
+
+          &:focus {
+            box-shadow: inset 0 0 2px 0 #8e4adf;
+          }
+        }
+      }
+    }
+
+    .comments {
+      textarea {
+        display: block;
+        padding: 10px;
+        width: 100%;
+        height: 100px;
+        border-radius: 5px;
+        border: 1px #8e4adf solid;
+        outline: none;
+        margin-top: 5px;
+
+        &:focus {
+          box-shadow: inset 0 0 2px 0 #8e4adf;
+        }
+      }
+    }
   }
 }
 
-.calculation {
-  flex: 1 1 70%;
-  padding-left: 20px;
-}
+  .calculation {
+    flex: 1 1 70%;
+    padding-left: 20px;
+  }
 </style>

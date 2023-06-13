@@ -1,26 +1,33 @@
 <template>
   <div class="filter-city">
-    <h2>{{ city }}</h2>
-    <slot></slot>
+    <h2>{{ city.city_name }}</h2>
+    <city-table
+        v-for="category in categories"
+        :category="category"
+        :key="category.title"
+    ></city-table>
   </div>
 </template>
 
 <script>
 
 import TableRow from "@/components/calculator/TableRow.vue";
+import CityTable from "@/components/calculator/CityTable.vue";
+import {mapGetters} from "vuex";
 
 export default {
-  components: {TableRow},
+  components: {CityTable, TableRow},
   props: {
     city: {
-      type: String
+      city_name: {
+        type: String
+      }
     }
   },
-  data() {
-    return {
-      selected: '',
-      rowArray: []
-    }
+  computed: {
+    ...mapGetters({
+      categories: 'calculatorData/chooseCategory'
+    })
   }
 }
 </script>

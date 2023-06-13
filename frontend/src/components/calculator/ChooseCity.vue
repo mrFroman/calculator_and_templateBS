@@ -8,17 +8,18 @@
 
         <div class="checkbox"
              v-for="city in cities"
+             :key="city.id"
         >
           <input
               type="checkbox"
-              :id=city
-              :value=city
+              :id=city.id
+              :value=city.city_name
               v-model="selectedCities"
           >
-          <label :for=city>{{ city }}</label>
+          <label :for=city.id>{{ city.city_name }}</label>
         </div>
       </div>
-      <calculator-button style="margin: 20px 0;" @click="updateCity">Выбрать</calculator-button>
+      <calculator-button @click="updateCity">Выбрать</calculator-button>
     </my-modal>
     <calculator-button @click="showModal">Выбрать города</calculator-button>
   </div>
@@ -31,16 +32,20 @@ import axios from "axios";
 
 export default {
   components: {MyModal, CalculatorButton},
-  emits: ['update:citiesProp'],
+  emits: ['update:cities'],
   props: {
-    citiesProp: {
-      type: Array
+    cities: {
+      id: {
+        type: Number
+      },
+      city_name: {
+        type: String
+      }
     }
   },
   data() {
     return {
       isVisible: false,
-      cities: [],
       selectedCities: []
     }
   },
@@ -49,17 +54,13 @@ export default {
       this.isVisible = true
     },
     updateCity() {
-      if(this.selectedCities.length < 1) {
-        alert('Выберите минимум 1 город')
-        return
-      }
-      this.$emit('update:citiesProp', this.selectedCities)
+      // if(this.selectedCities.length < 1) {
+      //   alert('Выберите минимум 1 город')
+      //   return
+      // }
+      this.$emit('update:cities', this.selectedCities)
       this.isVisible = false
     }
-  },
-  mounted() {
-    axios.get(`http://localhost:3000/cities`)
-        .then(response => this.cities = response.data)
   }
 }
 </script>
